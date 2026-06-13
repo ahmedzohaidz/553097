@@ -63,3 +63,5 @@ fastlane/Preview.html
 fastlane/screenshots
 fastlane/test_output
 fastlane/readme.md
+car_service_agent/data/*.db
+car_service_agent/.env
