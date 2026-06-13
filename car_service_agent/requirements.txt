@@ -8,6 +8,10 @@ requests>=2.31.0
 # environment configuration
 python-dotenv>=1.0.1
 
-# arabic text shaping for printed/PDF reports (optional)
+# arabic text shaping for printed/PDF reports
 arabic-reshaper>=3.0.0
 python-bidi>=0.4.2
+
+# PDF invoice generation
+reportlab>=4.1.0
+qrcode[pil]>=7.4.2
