@@ -163,6 +163,28 @@ CREATE TABLE IF NOT EXISTS customer_feedback (
 );
 
 -- ---------------------------------------------------------------------
+-- طلبات إعادة التوريد (تنبيهات المخزون اليومية)
+-- Reorder requests (daily inventory alerts)
+-- ---------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS reorder_requests (
+    reorder_request_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    created_at      TEXT NOT NULL DEFAULT (datetime('now')),
+    status          TEXT NOT NULL DEFAULT 'pending'
+                    CHECK (status IN ('pending', 'approved', 'rejected', 'received')),
+    total_cost      REAL NOT NULL DEFAULT 0,   -- التكلفة الإجمالية المقترحة (بدون ضريبة)
+    notes           TEXT
+);
+
+CREATE TABLE IF NOT EXISTS reorder_request_items (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    reorder_request_id INTEGER NOT NULL REFERENCES reorder_requests(reorder_request_id) ON DELETE CASCADE,
+    part_id         INTEGER NOT NULL REFERENCES parts(part_id),
+    quantity        INTEGER NOT NULL,
+    unit_cost       REAL NOT NULL,
+    line_total      REAL NOT NULL
+);
+
+-- ---------------------------------------------------------------------
 -- فهارس | Indexes
 -- ---------------------------------------------------------------------
 CREATE INDEX IF NOT EXISTS idx_vehicles_customer        ON vehicles(customer_id);
@@ -172,3 +194,4 @@ CREATE INDEX IF NOT EXISTS idx_diagnostics_work_order   ON diagnostics(work_orde
 CREATE INDEX IF NOT EXISTS idx_wo_parts_work_order      ON work_order_parts(work_order_id);
 CREATE INDEX IF NOT EXISTS idx_wo_labor_work_order      ON work_order_labor(work_order_id);
 CREATE INDEX IF NOT EXISTS idx_followups_customer       ON followups(customer_id);
+CREATE INDEX IF NOT EXISTS idx_reorder_items_request     ON reorder_request_items(reorder_request_id);
